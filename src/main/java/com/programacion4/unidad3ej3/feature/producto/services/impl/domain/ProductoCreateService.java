@@ -10,6 +10,7 @@ import com.programacion4.unidad3ej3.feature.producto.models.Producto;
 import com.programacion4.unidad3ej3.feature.producto.repositories.IProductoRepository;
 import com.programacion4.unidad3ej3.feature.producto.mappers.ProductoMapper;
 import com.programacion4.unidad3ej3.feature.producto.services.interfaces.commons.IProductoExistByNameService;
+import com.programacion4.unidad3ej3.feature.producto.services.interfaces.commons.IProductoFormateadorTexto;
 
 import lombok.AllArgsConstructor;
 
@@ -22,8 +23,14 @@ public class ProductoCreateService implements IProductoCreateService {
 
     private final IProductoRepository productoRepository;
 
+    private final IProductoFormateadorTexto ProductoFormateadorTexto;
+
     @Override
     public ProductoResponseDto create(ProductoCreateRequestDto dto) {
+
+        dto.setNombre(ProductoFormateadorTexto.capitalizarTexto(dto.getNombre()));
+        dto.setDescripcion(ProductoFormateadorTexto.capitalizarTexto(dto.getDescripcion()));
+        
 
         if (productoExistByNameService.existByName(dto.getNombre())) {
             throw new BadRequestException("El nombre del producto ya existe");
